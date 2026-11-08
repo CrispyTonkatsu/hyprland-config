@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -11,36 +12,29 @@
       nixpkgs,
       flake-utils,
       ...
-    }@inputs:
+    }:
     flake-utils.lib.eachDefaultSystem (
       local-system:
       let
         pkgs = nixpkgs.legacyPackages.${local-system};
-
-        # Extract only the stubs directory into a dedicated store path
-        hyprland-stubs = pkgs.runCommandLocal "hyprland-stubs" { } ''
-          mkdir -p $out
-          cp -r ${pkgs.hyprland}/share/hypr/stubs/* $out/
-        '';
       in
       {
         devShells.default = pkgs.mkShell {
-          name = "hypr-config";
+          name = "nixos-config";
 
           packages = with pkgs; [
             lua-language-server
           ];
 
-          # Reference the isolated stubs store path directly
-          HYPRLAND_STUBS = "${hyprland-stubs}";
+          HYPRLAND_STUBS = "${pkgs.hyprland}/share/hypr/stubs";
 
           shellHook = ''
-            # Dynamically generate .luarc.json pointing to the light stubs path
+            # Dynamically generate .luarc.json pointing to the exact current nix package stubs
             cat << EOF > .luarc.json
             {
               "workspace": {
                 "library": [
-                  "${hyprland-stubs}"
+                  "${pkgs.hyprland}/share/hypr/stubs"
                 ]
               },
               "diagnostics": {
@@ -49,7 +43,7 @@
             }
             EOF
 
-            echo "LSP configuration generated using isolated Hyprland stubs."
+            echo "LSP configuration generated for this Hyprland version."
           '';
         };
       }
