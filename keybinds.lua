@@ -63,30 +63,6 @@ hl.gesture({
 
 --- Managing hyprland
 bind_key("DELETE", hl.dsp.exit())
-bind_key("F1", hl.dsp.exec_cmd("~/.nixos/home-modules/scripts/gamemode.sh"))
 
 --- Key Utilities
-bind_key("SPACE", hl.dsp.exec_cmd("rofi -show drun"))
-bind_key("SHIFT + SPACE", hl.dsp.exec_cmd("rofi -show window"))
 bind_key("RETURN", hl.dsp.exec_cmd("kitty"))
-
---- Screen shot
-bind_key("Print", hl.dsp.exec_cmd("hyprshot -m window"))
-bind_key("SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region"))
-
---- External (using hl bind as they don't use the mod key)
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("swayosd-client --brightness raise"))
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("swayosd-client --brightness lower"))
-
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("swayosd-client --output-volume raise"))
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("swayosd-client --output-volume lower"))
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"))
-
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"))
-
---- Shader keybinds
-if hl.plugin.darkwindow ~= nil then
-	bind_key("CTRL + I", hl.plugin.darkwindow.dsp_shade({
-		shader = "invert",
-	}))
-end
